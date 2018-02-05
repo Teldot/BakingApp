@@ -1,10 +1,18 @@
 <resources>
     <string name="app_name">BakingApp</string>
 
+    <!--RECIPE LIST ITEM-->
+    <string name="item_recipe_image_description">Recipe Image</string>
+
+    <!--STEP LIST ITEM-->
+    <string name="item_recipe_step_image_description">Step Image</string>
+
 
 
     <!--TOOL TEXT-->
     <string name="item_recipe_name_text">Yellow Cake</string>
     <string name="item_recipe_ingredients_text">Ingredients:\n</string>
     <string name="item_recipe_servings_text">Servings: </string>
+
+    <string name="item_recipe_step_description">Recipe Introduction</string>
 </resources>

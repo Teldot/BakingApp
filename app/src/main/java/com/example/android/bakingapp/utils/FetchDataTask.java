@@ -71,6 +71,8 @@ public class FetchDataTask extends AsyncTask {
                 r.Name = recObj.getString(REC_NAME);
                 r.ImageUrl = recObj.getString(REC_IMAGE);
                 r.Servings = recObj.getInt(REC_SERVINGS);
+                if (r.ImageUrl != null && r.ImageUrl.length() > 0)
+                    r.Image = BitmapUtility.getBytes(NetworkUtils.loadImgFrom(r.ImageUrl, context));
 
                 JSONArray jIngrArray = recObj.getJSONArray(REC_INGREDIENTS);
                 if (jIngrArray != null && jIngrArray.length() > 0) {
@@ -96,6 +98,8 @@ public class FetchDataTask extends AsyncTask {
                         steps[j].ShortDescription = ingObj.getString(REC_STP_SRT_DESC);
                         steps[j].ThumbnailURL = ingObj.getString(REC_STP_TMBL_URL);
                         steps[j].VideoURL = ingObj.getString(REC_STP_VIDEO_URL);
+                        if (steps[j].ThumbnailURL != null && steps[j].ThumbnailURL.length() > 0)
+                            steps[j].Thumbnail = BitmapUtility.getBytes(NetworkUtils.loadImgFrom(steps[j].ThumbnailURL, context));
                     }
                     r.Steps = steps;
                 }

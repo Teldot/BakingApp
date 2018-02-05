@@ -1,4 +1,4 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.ui;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.Display;
 
+import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.entities.Recipe;
 import com.example.android.bakingapp.utils.AsyncTaskCompleteListener;
 import com.example.android.bakingapp.utils.FetchDataTask;
@@ -18,7 +21,7 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
     private LinearLayoutManager layoutManager;
     private RecipeListAdapter mRecipeListAdapter;
 
-    private final String K_RECYCLEDVIEW_STATE = "recycledview_state";
+    private final String K_RECYCLED_VIEW_STATE = "recycled_view_state";
     private Parcelable listState;
 
 
@@ -31,7 +34,7 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
             layoutManager = new GridLayoutManager(this, 1);
         else
-            layoutManager = new GridLayoutManager(this, 3);
+            layoutManager = new GridLayoutManager(this, getColNumber());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
@@ -44,14 +47,14 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
         super.onSaveInstanceState(outState);
         listState = layoutManager.onSaveInstanceState();
 
-        outState.putParcelable(K_RECYCLEDVIEW_STATE, listState);
+        outState.putParcelable(K_RECYCLED_VIEW_STATE, listState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null)
-            listState = savedInstanceState.getParcelable(K_RECYCLEDVIEW_STATE);
+            listState = savedInstanceState.getParcelable(K_RECYCLED_VIEW_STATE);
     }
 
     @Override
@@ -65,6 +68,16 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
                 new FetchDataTaskCompleteListener())
                 .execute();
 
+    }
+
+    private int getColNumber(){
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+
+        float density  = getResources().getDisplayMetrics().density;
+        float dpWidth  = outMetrics.widthPixels / density;
+        return Math.round(dpWidth/500);
     }
 
     @Override

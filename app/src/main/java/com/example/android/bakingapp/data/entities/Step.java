@@ -6,4 +6,5 @@ public class Step{
     public String ShortDescription;
     public String VideoURL;
     public String ThumbnailURL;
+    public byte[] Thumbnail;
 }

@@ -1,11 +1,11 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by US on 04/02/2018.
+ * Created by Mauricio Torres on 04/02/2018.
  */
 
 public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAdapter.RecipeStepListAdapterViewHolder> {
