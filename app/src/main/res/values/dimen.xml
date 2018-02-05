@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="item_constraint_start_margin">8dp</dimen>
+    <dimen name="item_constraint_end_margin">8dp</dimen>
+    <dimen name="item_constraint_top_margin">8dp</dimen>
+    <dimen name="item_constraint_bottom_margin">8dp</dimen>
+
+    <dimen name="recipe_name_text_size">24dp</dimen>
+    <dimen name="item_img_width">150dp</dimen>
+    <dimen name="item_img_height">150dp</dimen>
+
+</resources>
