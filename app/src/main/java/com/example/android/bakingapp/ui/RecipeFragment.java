@@ -1,6 +1,7 @@
 package com.example.android.bakingapp.ui;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ public class RecipeFragment extends Fragment implements RecipeStepListAdapter.Re
     RecipeStepListAdapter stepListAdapter;
     RecipeIngredientListAdapter ingredientListAdapter;
     private Recipe recipeData;
+    public OnRecipeStepSelectedListener parentListenerHandler;
 
     TextView tvRecipeName;
     Button btnShare;
@@ -38,6 +40,12 @@ public class RecipeFragment extends Fragment implements RecipeStepListAdapter.Re
         // Required empty public constructor
     }
 
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        parentListenerHandler = (OnRecipeStepSelectedListener) activity;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,7 +90,7 @@ public class RecipeFragment extends Fragment implements RecipeStepListAdapter.Re
 
     @Override
     public void OnClick(Step step) {
-
+        parentListenerHandler.OnRecipeStepSelected(step);
     }
 
     public Recipe getRecipeData() {
@@ -99,6 +107,7 @@ public class RecipeFragment extends Fragment implements RecipeStepListAdapter.Re
     @Override
     public void onSaveInstanceState(Bundle currentState) {
         currentState.putSerializable(RECIPE_DATA, recipeData);
+        super.onSaveInstanceState(currentState);
     }
 
     @Override

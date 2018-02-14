@@ -43,7 +43,8 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
         if (currentStep == null) return;
         if (currentStep.Thumbnail != null)
             holder.ivRecipeStepImage.setImageBitmap(BitmapUtility.getImage(currentStep.Thumbnail));
-        String desc = (currentStep.Id + 1) + ". " + currentStep.ShortDescription;
+        else holder.ivRecipeStepImage.setVisibility(View.GONE);
+        String desc = (currentStep.Id == 0 ? "" : (currentStep.Id + ". ")) + currentStep.ShortDescription;
         holder.tvRecipeDesc.setText(desc);
     }
 
@@ -72,10 +73,11 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
         public final TextView tvRecipeDesc;
         public final ImageView ivRecipeStepImage;
 
-        public RecipeStepListAdapterViewHolder(View itemView) {
-            super(itemView);
+        public RecipeStepListAdapterViewHolder(View view) {
+            super(view);
             tvRecipeDesc = (TextView) itemView.findViewById(R.id.item_recipe_step_desc);
             ivRecipeStepImage = (ImageView) itemView.findViewById(R.id.item_recipe_step_img);
+            view.setOnClickListener(this);
         }
 
         @Override

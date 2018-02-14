@@ -1,5 +1,6 @@
 package com.example.android.bakingapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ public class RecipeActivity extends AppCompatActivity implements OnRecipeStepSel
 
     private ViewGroup recipeContainer, stepsContainer;
     private static final String K_SELECTED_RECIPE = "K_SELECTED_RECIPE";
+    private static final String K_SELECTED_STEP = "K_SELECTED_STEP";
     private static final String K_IS_BIG_SCREEN = "K_IS_BIG_SCREEN";
     private boolean IS_BIG_SCREEN;
     private Recipe mRecipe;
@@ -73,7 +75,9 @@ public class RecipeActivity extends AppCompatActivity implements OnRecipeStepSel
             stepFragment.setStepData(step);
             stepFragment.loadData();
         } else {
-
+            Intent intent = new Intent(this, StepActivity.class);
+            intent.putExtra(K_SELECTED_STEP, step);
+            startActivity(intent);
         }
     }
 }

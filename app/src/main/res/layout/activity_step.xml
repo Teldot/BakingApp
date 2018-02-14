@@ -4,6 +4,6 @@
     android:id="@+id/step_fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.bakingapp.StepActivity">
+    tools:context="com.example.android.bakingapp.ui.StepActivity">
 
 </FrameLayout>

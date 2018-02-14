@@ -40,7 +40,7 @@ public class StepFragment extends Fragment {
         stepVideo = (SimpleExoPlayerView) rootView.findViewById(R.id.step_video);
 
         if (savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STEP_DATA)){
+            if (savedInstanceState.containsKey(STEP_DATA)) {
                 setStepData((Step) savedInstanceState.get(STEP_DATA));
             }
         }
@@ -53,14 +53,20 @@ public class StepFragment extends Fragment {
         loadData();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle currentState) {
+        currentState.putSerializable(STEP_DATA, stepData);
+        super.onSaveInstanceState(currentState);
+    }
+
     public void loadData() {
-        if (getStepData() !=null){
-            if (getStepData().Thumbnail!=null && getStepData().Thumbnail.length>0){
-                Bitmap thumbnail = BitmapUtility.getImage(getStepData().Thumbnail);
-                stepVideo.setDefaultArtwork(thumbnail);
-            }
-            tvStepDescription.setText(getStepData().Description);
+        if (getStepData() == null) return;
+        if (getStepData().Thumbnail != null && getStepData().Thumbnail.length > 0) {
+            Bitmap thumbnail = BitmapUtility.getImage(getStepData().Thumbnail);
+            stepVideo.setDefaultArtwork(thumbnail);
         }
+        tvStepDescription.setText(getStepData().Description);
+
     }
 
     public Step getStepData() {

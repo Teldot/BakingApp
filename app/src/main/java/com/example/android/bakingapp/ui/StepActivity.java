@@ -1,12 +1,12 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 
+import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.entities.Step;
-import com.example.android.bakingapp.ui.StepFragment;
 
 public class StepActivity extends AppCompatActivity {
     private ViewGroup stepContainer;
