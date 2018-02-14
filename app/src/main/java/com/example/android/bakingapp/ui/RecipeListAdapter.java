@@ -83,12 +83,16 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             mItemRecipeName = (TextView) view.findViewById(R.id.item_recipe_name);
             mItemServings = (TextView) view.findViewById(R.id.item_servings);
             mItemRecipeImg = (ImageView) view.findViewById(R.id.item_recipe_img);
+
+            view.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             Recipe recipe = getRecipesData()[adapterPosition];
+
+            mClickHandler.onClick(recipe);
         }
     }
 }

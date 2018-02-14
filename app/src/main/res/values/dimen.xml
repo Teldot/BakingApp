@@ -10,7 +10,7 @@
     <dimen name="item_img_width">150dp</dimen>
     <dimen name="item_img_height">150dp</dimen>
 
-    <!--activity_recipe_steps_list_item.xml-->
+    recipe_steps_list_item->
     <dimen name="recipe_step_desc_text">16sp</dimen>
     <dimen name="recipe_step_img_layout_width">100sp</dimen>
     <dimen name="recipe_step_img_layout_height">75sp</dimen>

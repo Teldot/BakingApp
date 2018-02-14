@@ -80,9 +80,9 @@ public class FetchDataTask extends AsyncTask {
                     for (int j = 0; j < jIngrArray.length(); j++) {
                         JSONObject ingObj = jIngrArray.getJSONObject(j);
                         ingredients[j] = new Ingredient();
-                        ingredients[j].Ingredient = ingObj.getString(REC_ING_INGREDIENT);
+                        ingredients[j].Ingredient = " - " + ingObj.getString(REC_ING_INGREDIENT);
                         ingredients[j].Measure = ingObj.getString(REC_ING_MEASURE);
-                        ingredients[j].Quantity = ingObj.getInt(REC_ING_QUANTITY);
+                        ingredients[j].Quantity = ingObj.getDouble(REC_ING_QUANTITY);
                     }
                     r.Ingredients = ingredients;
                 }

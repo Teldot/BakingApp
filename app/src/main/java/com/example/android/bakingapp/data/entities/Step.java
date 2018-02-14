@@ -1,6 +1,8 @@
 package com.example.android.bakingapp.data.entities;
 
-public class Step{
+import java.io.Serializable;
+
+public class Step implements Serializable{
     public int Id;
     public String Description;
     public String ShortDescription;

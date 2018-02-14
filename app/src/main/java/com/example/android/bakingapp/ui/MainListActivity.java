@@ -1,5 +1,6 @@
 package com.example.android.bakingapp.ui;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -20,6 +21,8 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
     private RecyclerView mRecyclerView;
     private LinearLayoutManager layoutManager;
     private RecipeListAdapter mRecipeListAdapter;
+
+    private static final String K_SELECTED_RECIPE = "K_SELECTED_RECIPE";
 
     private final String K_RECYCLED_VIEW_STATE = "recycled_view_state";
     private Parcelable listState;
@@ -70,20 +73,23 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
 
     }
 
-    private int getColNumber(){
+    private int getColNumber() {
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
 
-        float density  = getResources().getDisplayMetrics().density;
-        float dpWidth  = outMetrics.widthPixels / density;
-        return Math.round(dpWidth/500);
+        float density = getResources().getDisplayMetrics().density;
+        float dpWidth = outMetrics.widthPixels / density;
+        return Math.round(dpWidth / 500);
     }
 
     @Override
     public void onClick(Recipe recipe) {
-
+        Intent intent = new Intent(this, RecipeActivity.class);
+        intent.putExtra(K_SELECTED_RECIPE, recipe);
+        startActivity(intent);
     }
+
 
     public class FetchDataTaskCompleteListener implements AsyncTaskCompleteListener<Object> {
         @Override
