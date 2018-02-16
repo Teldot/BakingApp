@@ -22,7 +22,7 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
     private final RecipeStepListAdapterOnClickHandler mClickHandler;
 
     public interface RecipeStepListAdapterOnClickHandler {
-        void OnClick(Step step);
+        void OnClickedSelectedStep(Step[] steps, int selectedStep);
     }
 
     public RecipeStepListAdapter(RecipeStepListAdapterOnClickHandler handler, Context context) {
@@ -82,10 +82,7 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
 
         @Override
         public void onClick(View v) {
-            int pos = getAdapterPosition();
-            Step step = getStepsData()[pos];
-
-            mClickHandler.OnClick(step);
+            mClickHandler.OnClickedSelectedStep(getStepsData(), getAdapterPosition());
         }
     }
 }

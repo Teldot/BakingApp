@@ -10,11 +10,12 @@ import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.entities.Recipe;
 import com.example.android.bakingapp.data.entities.Step;
 
-public class RecipeActivity extends AppCompatActivity implements OnRecipeStepSelectedListener {
+public class RecipeActivity extends AppCompatActivity implements RecipeStepListAdapter.RecipeStepListAdapterOnClickHandler {
 
     private ViewGroup recipeContainer, stepsContainer;
     private static final String K_SELECTED_RECIPE = "K_SELECTED_RECIPE";
-    private static final String K_SELECTED_STEP = "K_SELECTED_STEP";
+    private static final String K_SELECTED_STEP_IDX = "K_SELECTED_STEP_IDX";
+    private static final String K_STEPS = "K_STEPS";
     private static final String K_IS_BIG_SCREEN = "K_IS_BIG_SCREEN";
     private boolean IS_BIG_SCREEN;
     private Recipe mRecipe;
@@ -47,8 +48,8 @@ public class RecipeActivity extends AppCompatActivity implements OnRecipeStepSel
             if (IS_BIG_SCREEN) {
                 stepFragment = new StepFragment();
                 if (mRecipe.Steps != null && mRecipe.Steps.length > 0) {
-                    stepFragment.setStepData(mRecipe.Steps[0]);
-                    //stepFragment.loadData();
+                    int cntStep = 0;
+                    stepFragment.setStepData(mRecipe.Steps, cntStep, getResources().getInteger(R.integer.step_desc_max_length));
                 }
                 fragmentManager.beginTransaction()
                         .replace(stepsContainer.getId(), stepFragment, stepFragment.getClass().getName())
@@ -69,14 +70,17 @@ public class RecipeActivity extends AppCompatActivity implements OnRecipeStepSel
         super.onSaveInstanceState(currentState);
     }
 
+
     @Override
-    public void OnRecipeStepSelected(Step step) {
+    public void OnClickedSelectedStep(Step[] steps, int selStep) {
+        int mxLgt = getResources().getInteger(R.integer.step_desc_max_length);
         if (IS_BIG_SCREEN && stepFragment != null) {
-            stepFragment.setStepData(step);
+            stepFragment.setStepData(steps, selStep, getResources().getInteger(R.integer.step_desc_max_length));
             stepFragment.loadData();
         } else {
             Intent intent = new Intent(this, StepActivity.class);
-            intent.putExtra(K_SELECTED_STEP, step);
+            intent.putExtra(K_STEPS, steps);
+            intent.putExtra(K_SELECTED_STEP_IDX, selStep);
             startActivity(intent);
         }
     }

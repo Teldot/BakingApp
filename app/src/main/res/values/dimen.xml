@@ -14,4 +14,6 @@
     <dimen name="recipe_step_desc_text">16sp</dimen>
     <dimen name="recipe_step_img_layout_width">100sp</dimen>
     <dimen name="recipe_step_img_layout_height">75sp</dimen>
+
+    <dimen name="step_desc_max_length">20</dimen>
 </resources>

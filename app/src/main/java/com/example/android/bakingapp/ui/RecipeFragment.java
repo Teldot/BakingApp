@@ -30,7 +30,7 @@ public class RecipeFragment extends Fragment implements RecipeStepListAdapter.Re
     RecipeStepListAdapter stepListAdapter;
     RecipeIngredientListAdapter ingredientListAdapter;
     private Recipe recipeData;
-    public OnRecipeStepSelectedListener parentListenerHandler;
+    public RecipeStepListAdapter.RecipeStepListAdapterOnClickHandler parentListenerHandler;
 
     TextView tvRecipeName;
     Button btnShare;
@@ -44,7 +44,7 @@ public class RecipeFragment extends Fragment implements RecipeStepListAdapter.Re
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        parentListenerHandler = (OnRecipeStepSelectedListener) activity;
+        parentListenerHandler = (RecipeStepListAdapter.RecipeStepListAdapterOnClickHandler) activity;
     }
 
     @Override
@@ -89,8 +89,8 @@ public class RecipeFragment extends Fragment implements RecipeStepListAdapter.Re
     }
 
     @Override
-    public void OnClick(Step step) {
-        parentListenerHandler.OnRecipeStepSelected(step);
+    public void OnClickedSelectedStep(Step[] step, int selStep) {
+        parentListenerHandler.OnClickedSelectedStep(step, selStep);
     }
 
     public Recipe getRecipeData() {
