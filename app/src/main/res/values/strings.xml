@@ -19,6 +19,6 @@
 
     <string name="item_recipe_step_description">Recipe Introduction</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--STEP FRAGMENT-->
+    <string name="notification_text">Keep cooking your favorite recipe!</string>
 </resources>

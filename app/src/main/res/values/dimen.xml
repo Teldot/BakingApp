@@ -10,10 +10,14 @@
     <dimen name="item_img_width">150dp</dimen>
     <dimen name="item_img_height">150dp</dimen>
 
-    recipe_steps_list_item->
+    <!--recipe_steps_list_item.xml-->
     <dimen name="recipe_step_desc_text">16sp</dimen>
     <dimen name="recipe_step_img_layout_width">100sp</dimen>
     <dimen name="recipe_step_img_layout_height">75sp</dimen>
 
-    <dimen name="step_desc_max_length">20</dimen>
+    <!--player controls dimen-->
+    <dimen name="player_control_button_height">30dp</dimen>
+    <dimen name="player_control_button_width">100dp</dimen>
+    <dimen name="player_control_linear_layout_top_pad">4dp</dimen>
+
 </resources>

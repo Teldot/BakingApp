@@ -80,7 +80,7 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
 
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
-        return Math.round(dpWidth / 500);
+        return Math.round(dpWidth / 300);
     }
 
     @Override

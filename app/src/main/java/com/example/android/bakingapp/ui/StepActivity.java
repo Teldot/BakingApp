@@ -33,7 +33,7 @@ public class StepActivity extends AppCompatActivity {
 
             stepContainer = (ViewGroup) findViewById(R.id.step_fragment_container);
             stepFragment = new StepFragment();
-            stepFragment.setStepData(mSteps, mStepIndex, getResources().getInteger(R.integer.step_desc_max_length));
+            stepFragment.setStepData(mSteps, mStepIndex, this);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()

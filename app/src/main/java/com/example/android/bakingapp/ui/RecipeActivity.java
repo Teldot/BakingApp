@@ -47,13 +47,13 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepListA
             IS_BIG_SCREEN = stepsContainer != null;
             if (IS_BIG_SCREEN) {
                 stepFragment = new StepFragment();
-                if (mRecipe.Steps != null && mRecipe.Steps.length > 0) {
-                    int cntStep = 0;
-                    stepFragment.setStepData(mRecipe.Steps, cntStep, getResources().getInteger(R.integer.step_desc_max_length));
-                }
                 fragmentManager.beginTransaction()
                         .replace(stepsContainer.getId(), stepFragment, stepFragment.getClass().getName())
                         .commit();
+                if (mRecipe.Steps != null && mRecipe.Steps.length > 0) {
+                    int cntStep = 0;
+                    stepFragment.setStepData(mRecipe.Steps, cntStep, this);
+                }
             }
         } else {
             IS_BIG_SCREEN = savedInstanceState.getBoolean(K_IS_BIG_SCREEN);
@@ -75,7 +75,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepListA
     public void OnClickedSelectedStep(Step[] steps, int selStep) {
         int mxLgt = getResources().getInteger(R.integer.step_desc_max_length);
         if (IS_BIG_SCREEN && stepFragment != null) {
-            stepFragment.setStepData(steps, selStep, getResources().getInteger(R.integer.step_desc_max_length));
+            stepFragment.setStepData(steps, selStep, this);
             stepFragment.loadData();
         } else {
             Intent intent = new Intent(this, StepActivity.class);
