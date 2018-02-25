@@ -57,15 +57,13 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         return recipesData.length;
     }
 
-    public void swapData(Recipe[] mData) {
-        if (mData == null || mData.length == 0) {
+    public Recipe[] swapData(Recipe[] mData) {
+        if (mData == null || mData.length == 0)
             recipesData = null;
-            this.notifyDataSetChanged();
-            return;
-        }
-
-        recipesData = mData;
+        else
+            recipesData = mData;
         this.notifyDataSetChanged();
+        return recipesData;
     }
 
     public Recipe[] getRecipesData() {

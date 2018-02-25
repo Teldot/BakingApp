@@ -11,16 +11,20 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Display;
 
+import com.example.android.bakingapp.BuildConfig;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.entities.Recipe;
 import com.example.android.bakingapp.utils.AsyncTaskCompleteListener;
 import com.example.android.bakingapp.utils.FetchDataTask;
+
+import timber.log.Timber;
 
 public class MainListActivity extends AppCompatActivity implements RecipeListAdapter.RecipeListAdapterOnClickHandler {
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager layoutManager;
     private RecipeListAdapter mRecipeListAdapter;
+    private Recipe[] recipeData;
 
     private static final String K_SELECTED_RECIPE = "K_SELECTED_RECIPE";
 
@@ -31,13 +35,21 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (BuildConfig.DEBUG)
+            Timber.plant(new Timber.DebugTree());
+
         setContentView(R.layout.activity_main_list);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             layoutManager = new GridLayoutManager(this, 1);
-        else
+            Timber.i("Orientation: ORIENTATION_PORTRAIT");
+        } else {
             layoutManager = new GridLayoutManager(this, getColNumber());
+            Timber.i("Orientation: ORIENTATION_LANDSCAPE");
+
+        }
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
@@ -67,6 +79,7 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
     }
 
     private void loadRecipesInfo() {
+        Timber.d("Fetching Recipes");
         new FetchDataTask(this,
                 new FetchDataTaskCompleteListener())
                 .execute();
@@ -85,6 +98,7 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
 
     @Override
     public void onClick(Recipe recipe) {
+        Timber.d("Recipe Selected: %s", recipe.Name);
         Intent intent = new Intent(this, RecipeActivity.class);
         intent.putExtra(K_SELECTED_RECIPE, recipe);
         startActivity(intent);
@@ -99,8 +113,10 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
 
         @Override
         public void onTaskComplete(Object result) {
-            Recipe[] recipeData = (Recipe[]) result;
+            Timber.d("Recipes Fetching completed");
+            recipeData = (Recipe[]) result;
             if (recipeData != null) {
+                Timber.d("Total Recipes: %d", recipeData.length);
                 mRecipeListAdapter.swapData(recipeData);
                 if (listState != null) {
                     layoutManager.onRestoreInstanceState(listState);
