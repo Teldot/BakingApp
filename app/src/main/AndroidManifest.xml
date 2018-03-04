@@ -19,7 +19,29 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.RecipeActivity" />
-        <activity android:name=".ui.StepActivity"></activity>
+        <activity android:name=".ui.StepActivity" />
+
+        <receiver android:name=".ui.widget.RecipeWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_widget_info" />
+        </receiver>
+
+        <provider
+            android:name=".data.provider.RecipeContentProvider"
+            android:authorities="com.example.android.bakingapp"
+            android:exported="true" />
+
+        <service android:name=".ui.widget.ListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false"/>
+
+        <service android:name=".ui.widget.BakingService"/>
+
     </application>
 
 </manifest>

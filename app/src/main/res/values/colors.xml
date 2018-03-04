@@ -8,4 +8,10 @@
     <!--player controls color-->
     <color name="background_color_button">#cc2d2d2d</color>
     <color name="background_color_player_layout">#cc2d2d2d</color>
+
+    <color name="appwidget_background_color">#81ff0000</color>
+    <color name="appwidget_text_color">#ffffff</color>
+
+    <!--TOOLS-->
+    <color name="appwidget_tools_background_color">#000</color>
 </resources>

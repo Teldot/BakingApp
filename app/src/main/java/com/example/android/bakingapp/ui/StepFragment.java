@@ -256,10 +256,7 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
                 mExoPlayer.prepare(mediaSource);
                 mExoPlayer.setPlayWhenReady(true);
             }
-        } else {
-            showNotification(null);
         }
-
     }
 
     private void releasePlayer() {
@@ -337,66 +334,46 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
 
     private void showNotification(PlaybackStateCompat state) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-        NotificationCompat.Action restartAction = null;
-        NotificationCompat.Action playPauseAction = null;
-        NotificationCompat.Action nextPauseAction = null;
+        NotificationCompat.Action restartAction;
+        NotificationCompat.Action playPauseAction;
+        NotificationCompat.Action nextPauseAction;
 
         //IF WANT TO BUILD A NOTIFICATION FOR A STEP WITH VIDEO
-        if (state != null) {
-            int icon;
-            String play_pause;
-            if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
-                icon = R.drawable.exo_controls_pause;
-                play_pause = getString(R.string.exo_controls_pause_description);
-            } else {
-                icon = R.drawable.exo_controls_play;
-                play_pause = getString(R.string.exo_controls_play_description);
-            }
-
-            playPauseAction = new NotificationCompat.Action(
-                    icon, play_pause,
-                    MediaButtonReceiver.buildMediaButtonPendingIntent(mContext,
-                            PlaybackStateCompat.ACTION_PLAY_PAUSE));
-
-            restartAction = new NotificationCompat.Action(
-                    R.drawable.exo_controls_previous, getString(R.string.exo_controls_previous_description),
-                    MediaButtonReceiver.buildMediaButtonPendingIntent
-                            (mContext, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
-
-            nextPauseAction = new NotificationCompat.Action(
-                    R.drawable.exo_controls_next, getString(R.string.exo_controls_next_description),
-                    MediaButtonReceiver.buildMediaButtonPendingIntent(mContext,
-                            PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
+        int icon;
+        String play_pause;
+        if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
+            icon = R.drawable.exo_controls_pause;
+            play_pause = getString(R.string.exo_controls_pause_description);
         } else {
-            playPauseAction = new NotificationCompat.Action(
-                    R.drawable.exo_controls_play,
-                    "Current Step",
-                    getStepIntent(mStepIdx));
-            if (IS_ANY_PREV_STEP)
-                restartAction = new NotificationCompat.Action(
-                        R.drawable.exo_controls_previous,
-                        "Previous Step",
-                        getStepIntent(mStepIdx - 1));
-            if (IS_ANY_NXT_STEP)
-                nextPauseAction = new NotificationCompat.Action(
-                        R.drawable.exo_controls_next,
-                        "Next Step",
-                        getStepIntent(mStepIdx + 1));
+            icon = R.drawable.exo_controls_play;
+            play_pause = getString(R.string.exo_controls_play_description);
         }
+
+        playPauseAction = new NotificationCompat.Action(
+                icon, play_pause,
+                MediaButtonReceiver.buildMediaButtonPendingIntent(mContext,
+                        PlaybackStateCompat.ACTION_PLAY_PAUSE));
+
+        restartAction = new NotificationCompat.Action(
+                R.drawable.exo_controls_previous, getString(R.string.exo_controls_previous_description),
+                MediaButtonReceiver.buildMediaButtonPendingIntent
+                        (mContext, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
+
+        nextPauseAction = new NotificationCompat.Action(
+                R.drawable.exo_controls_next, getString(R.string.exo_controls_next_description),
+                MediaButtonReceiver.buildMediaButtonPendingIntent(mContext,
+                        PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
+
 
         builder.setContentTitle(mRecipe.Name)
                 .setContentText(getStepData().ShortDescription)
                 //.setContentIntent(contentPendingIntent)
                 .setSmallIcon(R.drawable.ic_recipe)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-        if (restartAction != null)
-            builder.addAction(restartAction);
-        if (playPauseAction != null)
-            builder.addAction(playPauseAction);
-        if (nextPauseAction != null)
-            builder.addAction(nextPauseAction);
-        if (state != null)
-            builder.setStyle(new NotificationCompat.MediaStyle()
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .addAction(restartAction)
+                .addAction(playPauseAction)
+                .addAction(nextPauseAction)
+                .setStyle(new NotificationCompat.MediaStyle()
                     .setMediaSession(mMediaSession.getSessionToken())
                     .setShowActionsInCompactView(0, 1));
 

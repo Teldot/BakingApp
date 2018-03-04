@@ -16,9 +16,19 @@
     <string name="item_recipe_ingredient_name">Water</string>
     <string name="item_recipe_ingredient_qty">10</string>
     <string name="item_recipe_ingredient_measure">Cups</string>
+    <string name="widget_recipe_name">Brounies</string>
 
     <string name="item_recipe_step_description">Recipe Introduction</string>
 
     <!--STEP FRAGMENT-->
     <string name="notification_text">Keep cooking your favorite recipe!</string>
+
+    <!--WIDGET-->
+    <string name="appwidget_text">Recipe</string>
+    <string name="add_widget">BakingApp</string>
+    <string name="widget_shape_description">Shape description</string>
+    <string name="widget_image_description">Image description</string>
+    <string name="widget_recipe_servings_text">Servings: </string>
+
+
 </resources>
