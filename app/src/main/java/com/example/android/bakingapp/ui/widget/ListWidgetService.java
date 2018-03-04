@@ -12,6 +12,7 @@ import com.example.android.bakingapp.data.provider.RecipeContract;
 
 /**
  * Created by Mauricio Torres on 01/03/2018.
+ *
  */
 
 public class ListWidgetService extends RemoteViewsService {

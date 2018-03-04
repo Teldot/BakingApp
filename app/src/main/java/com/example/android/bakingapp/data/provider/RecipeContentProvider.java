@@ -14,6 +14,7 @@ import android.util.Log;
 
 /**
  * Created by Mauricio Torres on 01/03/2018.
+ *
  */
 
 public class RecipeContentProvider extends ContentProvider {
@@ -133,6 +134,7 @@ public class RecipeContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+
         getContext().getContentResolver().notifyChange(uri, null);
         return returnUri;
     }
