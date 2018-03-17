@@ -17,7 +17,6 @@
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:background="@color/background_color_player_layout"
-    android:layoutDirection="ltr"
     android:orientation="vertical">
 
     <LinearLayout
@@ -28,13 +27,13 @@
         android:paddingTop="@dimen/player_control_linear_layout_top_pad">
 
         <ImageButton
-            android:id="@+id/button_player_control_previous"
+            android:id="@+id/exo_rew"
+            style="@style/ExoMediaButton.Rewind"
             android:layout_width="@dimen/player_control_button_width"
             android:layout_height="@dimen/player_control_button_height"
             android:layout_gravity="center"
             android:background="@color/background_color_button"
-            android:contentDescription="@string/exo_controls_previous_description"
-            android:src="@drawable/exo_controls_previous" />
+            android:contentDescription="@string/exo_controls_previous_description" />
 
         <ImageButton
             android:id="@id/exo_play"
@@ -54,14 +53,14 @@
             android:background="@color/background_color_button"
             android:contentDescription="@string/exo_controls_pause_description" />
 
-        <ImageButton
-            android:id="@+id/button_player_control_next"
-            android:layout_width="@dimen/player_control_button_width"
-            android:layout_height="@dimen/player_control_button_height"
-            android:layout_gravity="center"
-            android:background="@color/background_color_button"
-            android:contentDescription="@string/exo_controls_next_description"
-            android:src="@drawable/exo_controls_next" />
+        <!--<ImageButton-->
+        <!--android:id="@+id/button_player_control_next"-->
+        <!--android:layout_width="@dimen/player_control_button_width"-->
+        <!--android:layout_height="@dimen/player_control_button_height"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:background="@color/background_color_button"-->
+        <!--android:contentDescription="@string/exo_controls_next_description"-->
+        <!--android:src="@drawable/exo_controls_next" />-->
 
     </LinearLayout>
 

@@ -11,13 +11,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by Mauricio Torres on 05/02/2018.
+ * Created by Mauricio Torres
+ * on 05/02/2018.
  */
 
-public final class NetworkUtils {
+final class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    public static Bitmap loadImgFrom(URL url, Context context) {
+    private static Bitmap loadImgFrom(URL url, Context context) {
         Bitmap bitmap = null;
         try {
             bitmap = Picasso.with(context).load(url.toString()).get();
@@ -27,11 +28,10 @@ public final class NetworkUtils {
         return bitmap;
     }
 
-    public static Bitmap loadImgFrom(String uriString, Context context){
+    static Bitmap loadImgFrom(String uriString, Context context){
         Uri uri = Uri.parse(uriString).buildUpon().build();
-        URL url = null;
         try {
-            url = new URL(uri.toString());
+            URL url = new URL(uri.toString());
             return loadImgFrom(url, context);
         } catch (MalformedURLException e) {
             Log.e(TAG, e.getMessage());

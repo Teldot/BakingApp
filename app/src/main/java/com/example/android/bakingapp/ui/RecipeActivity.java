@@ -27,20 +27,6 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepListA
     private int mStepIndx;
     StepFragment stepFragment;
 
-//    @Override
-//    public void onAttachFragment(Fragment fragment) {
-//        super.onAttachFragment(fragment);
-//        Timber.d("onAttachFragment");
-//        if (CALLED_FROM_NOTIF) {
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable(K_SELECTED_RECIPE, mRecipe);
-//            bundle.putInt(K_SELECTED_STEP_IDX, mStepIndx);
-//            bundle.putBoolean(K_IS_BIG_SCREEN, IS_BIG_SCREEN);
-//            fragment.onCreateView(getLayoutInflater(), stepsContainer, bundle);
-//            selectStep(mStepIndx);
-//        }
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

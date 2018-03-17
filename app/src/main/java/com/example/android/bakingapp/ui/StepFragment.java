@@ -2,9 +2,7 @@ package com.example.android.bakingapp.ui;
 
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
@@ -46,27 +43,22 @@ import com.google.android.exoplayer2.util.Util;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class StepFragment extends Fragment implements View.OnClickListener, ExoPlayer.EventListener {
 
     private static final String TAG = StepFragment.class.getName();
     private static final String K_SELECTED_RECIPE = "K_SELECTED_RECIPE";
     private static final String K_SELECTED_STEP_IDX = "K_SELECTED_STEP_IDX";
     private static final String K_IS_BIG_SCREEN = "K_IS_BIG_SCREEN";
-    private static final String K_IS_CALLED_FROM_NOTIF = "K_IS_CALLED_FROM_NOTIF";
+//    private static final String K_IS_CALLED_FROM_NOTIF = "K_IS_CALLED_FROM_NOTIF";
 
     private static final int NOTIFICATION_ID = 906;
-    private static final int INTENT_CODE = 0;
+    //    private static final int INTENT_CODE = 0;
     private boolean IS_BIG_SCREEN;
-    private boolean IS_ANY_PREV_STEP;
-    private boolean IS_ANY_NXT_STEP;
 
 
     private TextView tvStepDescription, tvStepShortDesc;
     private Button btnNextStep, btnPvsStep;
-    private ImageButton btnPlayerControlNext, btnPlayerControlPrev;
+//    private ImageButton btnPlayerControlNext, btnPlayerControlPrev;
     private Recipe mRecipe;
     private int mStepIdx;
     private Step mStepData;
@@ -111,10 +103,10 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
         btnNextStep.setOnClickListener(this);
         btnPvsStep = (Button) rootView.findViewById(R.id.btn_previous_step);
         btnPvsStep.setOnClickListener(this);
-        btnPlayerControlNext = (ImageButton) stepPlayerView.findViewById(R.id.button_player_control_next);
-        btnPlayerControlNext.setOnClickListener(this);
-        btnPlayerControlPrev = (ImageButton) stepPlayerView.findViewById(R.id.button_player_control_previous);
-        btnPlayerControlPrev.setOnClickListener(this);
+//        btnPlayerControlNext = (ImageButton) stepPlayerView.findViewById(R.id.button_player_control_next);
+//        btnPlayerControlNext.setOnClickListener(this);
+//        btnPlayerControlPrev = (ImageButton) stepPlayerView.findViewById(R.id.button_player_control_previous);
+//        btnPlayerControlPrev.setOnClickListener(this);
     }
 
     @Override
@@ -152,13 +144,13 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
         tvStepDescription.setText(getStepData().Description);
         tvStepShortDesc.setText(srtDesc);
 
-        IS_ANY_PREV_STEP = mPreviousStep != null;
-        IS_ANY_NXT_STEP = mNextStep != null;
+        boolean IS_ANY_PREV_STEP = mPreviousStep != null;
+        boolean IS_ANY_NXT_STEP = mNextStep != null;
 
         btnPvsStep.setVisibility(IS_ANY_PREV_STEP ? View.VISIBLE : View.GONE);
-        btnPlayerControlPrev.setVisibility(IS_ANY_PREV_STEP ? View.VISIBLE : View.GONE);
+//        btnPlayerControlPrev.setVisibility(IS_ANY_PREV_STEP ? View.VISIBLE : View.GONE);
         btnNextStep.setVisibility(IS_ANY_NXT_STEP ? View.VISIBLE : View.GONE);
-        btnPlayerControlNext.setVisibility(IS_ANY_NXT_STEP ? View.VISIBLE : View.GONE);
+//        btnPlayerControlNext.setVisibility(IS_ANY_NXT_STEP ? View.VISIBLE : View.GONE);
         btnPvsStep.setText(mPreviousStep);
         btnNextStep.setText(mNextStep);
         Uri videoUri = null;
@@ -192,11 +184,11 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
     public void onClick(View v) {
         int selStep = 0;
         switch (v.getId()) {
-            case R.id.button_player_control_previous:
+//            case R.id.button_player_control_previous:
             case R.id.btn_previous_step:
                 selStep = mStepIdx - 1;
                 break;
-            case R.id.button_player_control_next:
+//            case R.id.button_player_control_next:
             case R.id.btn_next_step:
                 selStep = mStepIdx + 1;
                 break;
@@ -222,9 +214,8 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
         // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player.
         mStateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(
-                        PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
-                                PlaybackStateCompat.ACTION_PLAY_PAUSE |
-                                PlaybackStateCompat.ACTION_SKIP_TO_NEXT);
+                        PlaybackStateCompat.ACTION_REWIND |
+                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
 
         mMediaSession.setPlaybackState(mStateBuilder.build());
 
@@ -295,7 +286,6 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
         }
         mMediaSession.setPlaybackState(mStateBuilder.build());
         showNotification(mStateBuilder.build());
-
     }
 
     @Override
@@ -336,34 +326,28 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
         NotificationCompat.Action restartAction;
         NotificationCompat.Action playPauseAction;
-        NotificationCompat.Action nextPauseAction;
 
-        //IF WANT TO BUILD A NOTIFICATION FOR A STEP WITH VIDEO
         int icon;
         String play_pause;
+        long action;
         if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
             icon = R.drawable.exo_controls_pause;
             play_pause = getString(R.string.exo_controls_pause_description);
+            action = PlaybackStateCompat.ACTION_PAUSE;
         } else {
             icon = R.drawable.exo_controls_play;
             play_pause = getString(R.string.exo_controls_play_description);
+            action = PlaybackStateCompat.ACTION_PLAY;
         }
 
         playPauseAction = new NotificationCompat.Action(
                 icon, play_pause,
-                MediaButtonReceiver.buildMediaButtonPendingIntent(mContext,
-                        PlaybackStateCompat.ACTION_PLAY_PAUSE));
+                MediaButtonReceiver.buildMediaButtonPendingIntent(mContext, action));
 
         restartAction = new NotificationCompat.Action(
-                R.drawable.exo_controls_previous, getString(R.string.exo_controls_previous_description),
+                R.drawable.exo_controls_previous, getString(R.string.exo_controls_rewind_description),
                 MediaButtonReceiver.buildMediaButtonPendingIntent
-                        (mContext, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
-
-        nextPauseAction = new NotificationCompat.Action(
-                R.drawable.exo_controls_next, getString(R.string.exo_controls_next_description),
-                MediaButtonReceiver.buildMediaButtonPendingIntent(mContext,
-                        PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
-
+                        (mContext, PlaybackStateCompat.ACTION_REWIND));
 
         builder.setContentTitle(mRecipe.Name)
                 .setContentText(getStepData().ShortDescription)
@@ -372,30 +356,29 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .addAction(restartAction)
                 .addAction(playPauseAction)
-                .addAction(nextPauseAction)
                 .setStyle(new NotificationCompat.MediaStyle()
-                    .setMediaSession(mMediaSession.getSessionToken())
-                    .setShowActionsInCompactView(0, 1));
+                        .setMediaSession(mMediaSession.getSessionToken())
+                        .setShowActionsInCompactView(0, 1));
 
 
         mNotificationManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    private PendingIntent getStepIntent(int stepIndx) {
-        Intent intent;
-        if (IS_BIG_SCREEN) {
-            intent = new Intent(mContext, RecipeActivity.class);
-        } else {
-            intent = new Intent(mContext, StepActivity.class);
-        }
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        intent.putExtra(K_SELECTED_RECIPE, mRecipe);
-        intent.putExtra(K_IS_BIG_SCREEN, IS_BIG_SCREEN);
-        intent.putExtra(K_SELECTED_STEP_IDX, stepIndx);
-        intent.putExtra(K_IS_CALLED_FROM_NOTIF, true);
-
-        return PendingIntent.getActivity(mContext, INTENT_CODE, intent, 0);
-    }
+//    private PendingIntent getStepIntent(int stepIndx) {
+//        Intent intent;
+//        if (IS_BIG_SCREEN) {
+//            intent = new Intent(mContext, RecipeActivity.class);
+//        } else {
+//            intent = new Intent(mContext, StepActivity.class);
+//        }
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//
+//        intent.putExtra(K_SELECTED_RECIPE, mRecipe);
+//        intent.putExtra(K_IS_BIG_SCREEN, IS_BIG_SCREEN);
+//        intent.putExtra(K_SELECTED_STEP_IDX, stepIndx);
+//        intent.putExtra(K_IS_CALLED_FROM_NOTIF, true);
+//
+//        return PendingIntent.getActivity(mContext, INTENT_CODE, intent, 0);
+//    }
 }

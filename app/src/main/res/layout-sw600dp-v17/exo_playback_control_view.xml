@@ -17,6 +17,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:background="@color/background_color_player_layout"
+    android:layoutDirection="ltr"
     android:orientation="vertical">
 
     <LinearLayout
