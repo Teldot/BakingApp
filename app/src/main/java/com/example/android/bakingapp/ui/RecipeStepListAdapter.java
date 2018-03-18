@@ -13,7 +13,8 @@ import com.example.android.bakingapp.data.entities.Step;
 import com.example.android.bakingapp.utils.BitmapUtility;
 
 /**
- * Created by Mauricio Torres on 04/02/2018.
+ * Created by Mauricio Torres
+ * on 04/02/2018.
  */
 
 public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAdapter.RecipeStepListAdapterViewHolder> {
@@ -65,7 +66,7 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
         this.notifyDataSetChanged();
     }
 
-    public Step[] getStepsData() {
+    private Step[] getStepsData() {
         return stepsData;
     }
 
@@ -75,8 +76,8 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
 
         public RecipeStepListAdapterViewHolder(View view) {
             super(view);
-            tvRecipeDesc = (TextView) itemView.findViewById(R.id.item_recipe_step_desc);
-            ivRecipeStepImage = (ImageView) itemView.findViewById(R.id.item_recipe_step_img);
+            tvRecipeDesc = itemView.findViewById(R.id.item_recipe_step_desc);
+            ivRecipeStepImage = itemView.findViewById(R.id.item_recipe_step_img);
             view.setOnClickListener(this);
         }
 

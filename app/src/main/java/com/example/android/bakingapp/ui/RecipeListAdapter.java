@@ -13,7 +13,8 @@ import com.example.android.bakingapp.data.entities.Recipe;
 import com.example.android.bakingapp.utils.BitmapUtility;
 
 /**
- * Created by Mauricio Torres on 04/02/2018.
+ * Created by Mauricio Torres
+ * on 04/02/2018.
  */
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeListAdapterViewHolder> {
@@ -27,7 +28,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         void onClick(Recipe recipe);
     }
 
-    public RecipeListAdapter(RecipeListAdapterOnClickHandler onClickHandler, Context context) {
+    RecipeListAdapter(RecipeListAdapterOnClickHandler onClickHandler, Context context) {
         mContext = context;
         mClickHandler = onClickHandler;
     }
@@ -45,7 +46,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         if (currentRecipe == null) return;
 
         holder.mItemRecipeName.setText(currentRecipe.Name);
-        holder.mItemServings.setText(mContext.getString(R.string.item_recipe_servings_text) + currentRecipe.Servings);
+        String servings = mContext.getString(R.string.item_recipe_servings_text) + currentRecipe.Servings;
+        holder.mItemServings.setText(servings);
 
         if (currentRecipe.Image != null && currentRecipe.Image.length > 0)
             holder.mItemRecipeImg.setImageBitmap(BitmapUtility.getImage(currentRecipe.Image));
@@ -57,30 +59,29 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         return recipesData.length;
     }
 
-    public Recipe[] swapData(Recipe[] mData) {
+    void swapData(Recipe[] mData) {
         if (mData == null || mData.length == 0)
             recipesData = null;
         else
             recipesData = mData;
         this.notifyDataSetChanged();
-        return recipesData;
     }
 
-    public Recipe[] getRecipesData() {
+    private Recipe[] getRecipesData() {
         return recipesData;
     }
 
     public class RecipeListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public final TextView mItemRecipeName;
-        public final TextView mItemServings;
-        public final ImageView mItemRecipeImg;
+        final TextView mItemRecipeName;
+        final TextView mItemServings;
+        final ImageView mItemRecipeImg;
 
-        public RecipeListAdapterViewHolder(View view) {
+        RecipeListAdapterViewHolder(View view) {
             super(view);
-            mItemRecipeName = (TextView) view.findViewById(R.id.item_recipe_name);
-            mItemServings = (TextView) view.findViewById(R.id.item_servings);
-            mItemRecipeImg = (ImageView) view.findViewById(R.id.item_recipe_img);
+            mItemRecipeName = view.findViewById(R.id.item_recipe_name);
+            mItemServings = view.findViewById(R.id.item_servings);
+            mItemRecipeImg = view.findViewById(R.id.item_recipe_img);
 
             view.setOnClickListener(this);
         }

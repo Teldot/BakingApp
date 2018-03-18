@@ -24,7 +24,7 @@ public class ListWidgetService extends RemoteViewsService {
 }
 
 class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-    private Context mContext;
+    private final Context mContext;
     private Cursor mCursor;
 
     ListRemoteViewsFactory(Context applicationContext) {

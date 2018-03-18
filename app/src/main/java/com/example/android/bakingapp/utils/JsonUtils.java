@@ -5,17 +5,17 @@ import android.content.res.AssetManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * Created by US on 04/02/2018.
+ * Created by US
+ * on 04/02/2018.
  */
 
-public class JsonUtils {
+class JsonUtils {
     private static String getJSONString(Context context) {
         StringBuilder str = new StringBuilder("");
         try {
@@ -36,18 +36,18 @@ public class JsonUtils {
         return str.toString();
     }
 
-    public static JSONObject getJObject(Context context)
-    {
-        JSONObject json = null;
-
-        try {
-            json = new JSONObject(getJSONString(context));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return json;
-    }
-    public static JSONArray getJArray(Context context)
+//    public static JSONObject getJObject(Context context)
+//    {
+//        JSONObject json = null;
+//
+//        try {
+//            json = new JSONObject(getJSONString(context));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return json;
+//    }
+    static JSONArray getJArray(Context context)
     {
         JSONArray json = null;
 

@@ -24,16 +24,15 @@ import timber.log.Timber;
  */
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
-    public static final String K_SELECTED_RECIPE = "K_SELECTED_RECIPE";
-    static Recipe mRecipe;
-    static RemoteViews views;
+    private static final String K_SELECTED_RECIPE = "K_SELECTED_RECIPE";
+    private static Recipe mRecipe;
 
     public RecipeWidgetProvider() {
 
     }
 
-    static void updateAppWidget(final Context context, AppWidgetManager appWidgetManager,
-                                final int appWidgetId) {
+    private static void updateAppWidget(final Context context, AppWidgetManager appWidgetManager,
+                                        final int appWidgetId) {
         Timber.i("Loading RecipeData...");
         loadRecipeData(context);
         Timber.i("RecipeData loaded:%s", (mRecipe == null ? "0" : "1"));
@@ -46,7 +45,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Construct the RemoteViews object
-        views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
         views.setOnClickPendingIntent(R.id.widget_container, pendingIntent);
         Timber.i("Loading data fields...");
         views = loadData(context, views);

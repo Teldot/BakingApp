@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
@@ -24,17 +23,12 @@ import com.example.android.bakingapp.data.entities.Step;
 public class RecipeFragment extends Fragment implements RecipeStepListAdapter.RecipeStepListAdapterOnClickHandler {
 
     private static final String RECIPE_DATA = "RECIPE_DATA";
-    Context mContext;
-    RecyclerView rvRecipeStepsList;
-    RecyclerView rvRecipeIngredientsList;
-    RecipeStepListAdapter stepListAdapter;
-    RecipeIngredientListAdapter ingredientListAdapter;
+    private RecipeStepListAdapter stepListAdapter;
+    private RecipeIngredientListAdapter ingredientListAdapter;
     private Recipe recipeData;
-    public RecipeStepListAdapter.RecipeStepListAdapterOnClickHandler parentListenerHandler;
+    private RecipeStepListAdapter.RecipeStepListAdapterOnClickHandler parentListenerHandler;
 
-    TextView tvRecipeName;
-    Button btnShare;
-
+    private TextView tvRecipeName;
 
     public RecipeFragment() {
         // Required empty public constructor
@@ -50,14 +44,13 @@ public class RecipeFragment extends Fragment implements RecipeStepListAdapter.Re
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mContext = getContext();
+        Context mContext = getContext();
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
 
-        rvRecipeStepsList = (RecyclerView) rootView.findViewById(R.id.rv_recipe_steps_list);
-        rvRecipeIngredientsList = (RecyclerView) rootView.findViewById(R.id.rv_recipe_ingredients_list);
-        tvRecipeName = (TextView) rootView.findViewById(R.id.tv_recipe_name);
-        btnShare = (Button) rootView.findViewById(R.id.btn_share);
+        RecyclerView rvRecipeStepsList = rootView.findViewById(R.id.rv_recipe_steps_list);
+        RecyclerView rvRecipeIngredientsList = rootView.findViewById(R.id.rv_recipe_ingredients_list);
+        tvRecipeName = rootView.findViewById(R.id.tv_recipe_name);
 
         GridLayoutManager stepLayoutManager = new GridLayoutManager(mContext, 1);
         GridLayoutManager ingredLayoutManager = new GridLayoutManager(mContext, 1);
@@ -80,7 +73,7 @@ public class RecipeFragment extends Fragment implements RecipeStepListAdapter.Re
         return rootView;
     }
 
-    public void loadData() {
+    private void loadData() {
         if (getRecipeData() == null) return;
         stepListAdapter.swapData(getRecipeData().Steps);
         ingredientListAdapter.swapData(getRecipeData().Ingredients);
@@ -93,7 +86,7 @@ public class RecipeFragment extends Fragment implements RecipeStepListAdapter.Re
         parentListenerHandler.OnClickedSelectedStep(step, selStep);
     }
 
-    public Recipe getRecipeData() {
+    private Recipe getRecipeData() {
         return recipeData;
     }
 
@@ -110,8 +103,4 @@ public class RecipeFragment extends Fragment implements RecipeStepListAdapter.Re
         super.onSaveInstanceState(currentState);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 }

@@ -1,8 +1,13 @@
 package com.example.android.bakingapp.ui;
 
 
+import android.app.Dialog;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
@@ -49,16 +55,15 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
     private static final String K_SELECTED_RECIPE = "K_SELECTED_RECIPE";
     private static final String K_SELECTED_STEP_IDX = "K_SELECTED_STEP_IDX";
     private static final String K_IS_BIG_SCREEN = "K_IS_BIG_SCREEN";
-//    private static final String K_IS_CALLED_FROM_NOTIF = "K_IS_CALLED_FROM_NOTIF";
+    private static final String K_PLAYER_POSITION = "K_PLAYER_POSITION";
 
     private static final int NOTIFICATION_ID = 906;
-    //    private static final int INTENT_CODE = 0;
     private boolean IS_BIG_SCREEN;
+    private long playerPosition = 0;
 
 
     private TextView tvStepDescription, tvStepShortDesc;
     private Button btnNextStep, btnPvsStep;
-//    private ImageButton btnPlayerControlNext, btnPlayerControlPrev;
     private Recipe mRecipe;
     private int mStepIdx;
     private Step mStepData;
@@ -71,6 +76,9 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
     private NotificationManager mNotificationManager;
+
+    private Dialog mFullScreenDialog;
+    private boolean mExoPlayerFullscreen = false;
 
     public StepFragment() {
         // Required empty public constructor
@@ -89,24 +97,21 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
                 setStepData((Recipe) savedInstanceState.get(K_SELECTED_RECIPE),
                         savedInstanceState.getInt(K_SELECTED_STEP_IDX),
                         savedInstanceState.getBoolean(K_IS_BIG_SCREEN),
-                        mContext);
+                        mContext,
+                        savedInstanceState.getLong(K_PLAYER_POSITION));
             }
         }
         return rootView;
     }
 
     private void initViews() {
-        tvStepDescription = (TextView) rootView.findViewById(R.id.tv_step_description);
-        tvStepShortDesc = (TextView) rootView.findViewById(R.id.tv_step_short_description);
-        stepPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.step_video);
-        btnNextStep = (Button) rootView.findViewById(R.id.btn_next_step);
+        tvStepDescription = rootView.findViewById(R.id.tv_step_description);
+        tvStepShortDesc = rootView.findViewById(R.id.tv_step_short_description);
+        stepPlayerView = rootView.findViewById(R.id.step_video);
+        btnNextStep = rootView.findViewById(R.id.btn_next_step);
         btnNextStep.setOnClickListener(this);
-        btnPvsStep = (Button) rootView.findViewById(R.id.btn_previous_step);
+        btnPvsStep = rootView.findViewById(R.id.btn_previous_step);
         btnPvsStep.setOnClickListener(this);
-//        btnPlayerControlNext = (ImageButton) stepPlayerView.findViewById(R.id.button_player_control_next);
-//        btnPlayerControlNext.setOnClickListener(this);
-//        btnPlayerControlPrev = (ImageButton) stepPlayerView.findViewById(R.id.button_player_control_previous);
-//        btnPlayerControlPrev.setOnClickListener(this);
     }
 
     @Override
@@ -114,6 +119,15 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
         super.onResume();
         //initViews();
         loadData();
+        initFullscreenDialog();
+        Configuration newConfig = mContext.getResources().getConfiguration();
+        if (!IS_BIG_SCREEN) {
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                openFullscreenDialog();
+            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                closeFullscreenDialog();
+            }
+        }
     }
 
     @Override
@@ -126,10 +140,12 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
 
     @Override
     public void onSaveInstanceState(Bundle currentState) {
+        if (mExoPlayer != null)
+            playerPosition = mExoPlayer.getCurrentPosition();
         currentState.putSerializable(K_SELECTED_RECIPE, mRecipe);
         currentState.putInt(K_SELECTED_STEP_IDX, mStepIdx);
         currentState.putBoolean(K_IS_BIG_SCREEN, IS_BIG_SCREEN);
-
+        currentState.putLong(K_PLAYER_POSITION, playerPosition);
         super.onSaveInstanceState(currentState);
     }
 
@@ -148,28 +164,56 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
         boolean IS_ANY_NXT_STEP = mNextStep != null;
 
         btnPvsStep.setVisibility(IS_ANY_PREV_STEP ? View.VISIBLE : View.GONE);
-//        btnPlayerControlPrev.setVisibility(IS_ANY_PREV_STEP ? View.VISIBLE : View.GONE);
         btnNextStep.setVisibility(IS_ANY_NXT_STEP ? View.VISIBLE : View.GONE);
-//        btnPlayerControlNext.setVisibility(IS_ANY_NXT_STEP ? View.VISIBLE : View.GONE);
         btnPvsStep.setText(mPreviousStep);
         btnNextStep.setText(mNextStep);
         Uri videoUri = null;
+
         releasePlayer();
         initializeMediaSession();
         if (getStepData().VideoURL != null && getStepData().VideoURL.length() > 0) {
+            rootView.findViewById(R.id.player_frame).setVisibility(View.VISIBLE);
             stepPlayerView.setVisibility(View.VISIBLE);
             videoUri = Uri.parse(getStepData().VideoURL);
         } else {
+            playerPosition = 0;
+            rootView.findViewById(R.id.player_frame).setVisibility(View.GONE);
             stepPlayerView.setVisibility(View.GONE);
         }
         initializePlayer(videoUri);
     }
 
-    public Step getStepData() {
+    private void initFullscreenDialog() {
+        mFullScreenDialog = new Dialog(mContext, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+            public void onBackPressed() {
+                if (mExoPlayerFullscreen)
+                    closeFullscreenDialog();
+                super.onBackPressed();
+            }
+        };
+    }
+
+    private void openFullscreenDialog() {
+
+        ((ViewGroup) stepPlayerView.getParent()).removeView(stepPlayerView);
+        mFullScreenDialog.addContentView(stepPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mExoPlayerFullscreen = true;
+        mFullScreenDialog.show();
+    }
+
+    private void closeFullscreenDialog() {
+
+        ((ViewGroup) stepPlayerView.getParent()).removeView(stepPlayerView);
+        ((FrameLayout) rootView.findViewById(R.id.player_frame)).addView(stepPlayerView);
+        mExoPlayerFullscreen = false;
+        mFullScreenDialog.dismiss();
+    }
+
+    private Step getStepData() {
         return mStepData;
     }
 
-    public void setStepData(Recipe recipe, int stepId, boolean isBigScreen, Context context) {
+    public void setStepData(Recipe recipe, int stepId, boolean isBigScreen, Context context, long playerPos) {
         mContext = context;
         int maxLength = mContext.getResources().getInteger(R.integer.step_desc_max_length);
         IS_BIG_SCREEN = isBigScreen;
@@ -178,54 +222,42 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
         mStepData = recipe.Steps[stepId];
         mNextStep = RecipeUtility.getNextStepDesc(recipe.Steps, stepId, maxLength);
         mPreviousStep = RecipeUtility.getPreviousStepDesc(recipe.Steps, stepId, maxLength);
+        playerPosition = playerPos;
     }
 
     @Override
     public void onClick(View v) {
         int selStep = 0;
         switch (v.getId()) {
-//            case R.id.button_player_control_previous:
             case R.id.btn_previous_step:
                 selStep = mStepIdx - 1;
                 break;
-//            case R.id.button_player_control_next:
             case R.id.btn_next_step:
                 selStep = mStepIdx + 1;
                 break;
             default:
                 break;
         }
-        setStepData(mRecipe, selStep, IS_BIG_SCREEN, mContext);
+        setStepData(mRecipe, selStep, IS_BIG_SCREEN, mContext, playerPosition);
         loadData();
     }
 
     private void initializeMediaSession() {
-
         mMediaSession = new MediaSessionCompat(mContext, TAG);
-
-        // Enable callbacks from MediaButtons and TransportControls.
         mMediaSession.setFlags(
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
                         MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
-        // Do not let MediaButtons restart the player when the app is not visible.
         mMediaSession.setMediaButtonReceiver(null);
-
-        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player.
         mStateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(
-                        PlaybackStateCompat.ACTION_REWIND |
+                        PlaybackStateCompat.ACTION_PLAY |
+                                PlaybackStateCompat.ACTION_PAUSE |
+                                PlaybackStateCompat.ACTION_REWIND |
                                 PlaybackStateCompat.ACTION_PLAY_PAUSE);
 
         mMediaSession.setPlaybackState(mStateBuilder.build());
-
-
-        // SessionCallback has methods that handle callbacks from a media controller.
         mMediaSession.setCallback(new SessionCallback());
-
-        // Start the Media Session since the activity is active.
         mMediaSession.setActive(true);
-
     }
 
     private void initializePlayer(Uri mediaUri) {
@@ -245,6 +277,7 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
                 MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                         mContext, userAgent), new DefaultExtractorsFactory(), null, null);
                 mExoPlayer.prepare(mediaSource);
+                mExoPlayer.seekTo(playerPosition);
                 mExoPlayer.setPlayWhenReady(true);
             }
         }
@@ -311,21 +344,17 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
 
         @Override
         public void onSkipToPrevious() {
-//            mExoPlayer.seekTo(0);
-            btnPvsStep.performClick();
+            mExoPlayer.seekTo(0);
         }
 
         @Override
-        public void onSkipToNext() {
-//            mExoPlayer.seekTo(0);
-            btnNextStep.performClick();
+        public void onRewind() {
+            mExoPlayer.seekTo(0);
         }
     }
 
     private void showNotification(PlaybackStateCompat state) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-        NotificationCompat.Action restartAction;
-        NotificationCompat.Action playPauseAction;
 
         int icon;
         String play_pause;
@@ -340,18 +369,22 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
             action = PlaybackStateCompat.ACTION_PLAY;
         }
 
-        playPauseAction = new NotificationCompat.Action(
+        NotificationCompat.Action playPauseAction = new NotificationCompat.Action(
                 icon, play_pause,
                 MediaButtonReceiver.buildMediaButtonPendingIntent(mContext, action));
 
-        restartAction = new NotificationCompat.Action(
+        NotificationCompat.Action restartAction = new NotificationCompat.Action(
                 R.drawable.exo_controls_previous, getString(R.string.exo_controls_rewind_description),
                 MediaButtonReceiver.buildMediaButtonPendingIntent
                         (mContext, PlaybackStateCompat.ACTION_REWIND));
 
+
+        PendingIntent contentPendingIntent = PendingIntent.getActivity
+                (mContext, 0, new Intent(mContext, StepFragment.class), 0);
+
         builder.setContentTitle(mRecipe.Name)
                 .setContentText(getStepData().ShortDescription)
-                //.setContentIntent(contentPendingIntent)
+                .setContentIntent(contentPendingIntent)
                 .setSmallIcon(R.drawable.ic_recipe)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .addAction(restartAction)
@@ -365,20 +398,13 @@ public class StepFragment extends Fragment implements View.OnClickListener, ExoP
         mNotificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-//    private PendingIntent getStepIntent(int stepIndx) {
-//        Intent intent;
-//        if (IS_BIG_SCREEN) {
-//            intent = new Intent(mContext, RecipeActivity.class);
-//        } else {
-//            intent = new Intent(mContext, StepActivity.class);
-//        }
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//
-//        intent.putExtra(K_SELECTED_RECIPE, mRecipe);
-//        intent.putExtra(K_IS_BIG_SCREEN, IS_BIG_SCREEN);
-//        intent.putExtra(K_SELECTED_STEP_IDX, stepIndx);
-//        intent.putExtra(K_IS_CALLED_FROM_NOTIF, true);
-//
-//        return PendingIntent.getActivity(mContext, INTENT_CODE, intent, 0);
-//    }
+    public static class MediaReceiver extends BroadcastReceiver {
+        public MediaReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MediaButtonReceiver.handleIntent(mMediaSession, intent);
+        }
+    }
 }

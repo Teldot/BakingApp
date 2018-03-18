@@ -14,7 +14,7 @@ import timber.log.Timber;
  *
  */
 
-public class RecipeDbHelper extends SQLiteOpenHelper {
+class RecipeDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "bakingapp.db";
     private static final int DATABASE_VERSION = 2;
 

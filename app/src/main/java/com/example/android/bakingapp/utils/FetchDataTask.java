@@ -12,7 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by US on 04/02/2018.
+ * Created by US
+ * on 04/02/2018.
  */
 
 public class FetchDataTask extends AsyncTask {

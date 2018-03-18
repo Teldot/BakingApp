@@ -26,10 +26,8 @@ import timber.log.Timber;
 
 public class MainListActivity extends AppCompatActivity implements RecipeListAdapter.RecipeListAdapterOnClickHandler {
 
-    private RecyclerView mRecyclerView;
     private LinearLayoutManager layoutManager;
     private RecipeListAdapter mRecipeListAdapter;
-    private Recipe[] recipeData;
 
     private static final String K_SELECTED_RECIPE = "K_SELECTED_RECIPE";
 
@@ -46,7 +44,7 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
 
         setContentView(R.layout.activity_main_list);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
+        RecyclerView mRecyclerView = findViewById(R.id.rv_recipe_list);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             layoutManager = new GridLayoutManager(this, 1);
             Timber.i("Orientation: ORIENTATION_PORTRAIT");
@@ -166,7 +164,7 @@ public class MainListActivity extends AppCompatActivity implements RecipeListAda
         @Override
         public void onTaskComplete(Object result) {
             Timber.d("Recipes Fetching completed");
-            recipeData = (Recipe[]) result;
+            Recipe[] recipeData = (Recipe[]) result;
             if (recipeData != null) {
                 Timber.d("Total Recipes: %d", recipeData.length);
                 mRecipeListAdapter.swapData(recipeData);

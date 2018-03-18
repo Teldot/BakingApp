@@ -15,17 +15,16 @@ import timber.log.Timber;
 
 public class RecipeActivity extends AppCompatActivity implements RecipeStepListAdapter.RecipeStepListAdapterOnClickHandler {
 
-    private ViewGroup recipeContainer, stepsContainer;
     private static final String K_SELECTED_RECIPE = "K_SELECTED_RECIPE";
     private static final String K_SELECTED_STEP_IDX = "K_SELECTED_STEP_IDX";
     private static final String K_IS_BIG_SCREEN = "K_IS_BIG_SCREEN";
-    private static final String K_IS_CALLED_FROM_NOTIF = "K_IS_CALLED_FROM_NOTIF";
+//    private static final String K_IS_CALLED_FROM_NOTIF = "K_IS_CALLED_FROM_NOTIF";
 
-    private boolean CALLED_FROM_NOTIF;
+//    private boolean CALLED_FROM_NOTIF;
     private boolean IS_BIG_SCREEN;
     private Recipe mRecipe;
     private int mStepIndx;
-    StepFragment stepFragment;
+    private StepFragment stepFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +40,15 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepListA
                 mRecipe = (Recipe) recipeBundle.getSerializable(K_SELECTED_RECIPE);
             if (recipeBundle.containsKey(K_SELECTED_STEP_IDX))
                 mStepIndx = recipeBundle.getInt(K_SELECTED_STEP_IDX);
-            if (recipeBundle.containsKey(K_IS_CALLED_FROM_NOTIF))
-                CALLED_FROM_NOTIF = recipeBundle.getBoolean(K_IS_CALLED_FROM_NOTIF);
+//            if (recipeBundle.containsKey(K_IS_CALLED_FROM_NOTIF))
+//                CALLED_FROM_NOTIF = recipeBundle.getBoolean(K_IS_CALLED_FROM_NOTIF);
         }
-        stepsContainer = (ViewGroup) findViewById(R.id.recipe_steps_fragment_container);
+        ViewGroup stepsContainer = findViewById(R.id.recipe_steps_fragment_container);
         IS_BIG_SCREEN = stepsContainer != null;
         // Only create new fragments when there is no previously saved state
         if (savedInstanceState == null) {
             //RECIPE
-            recipeContainer = (ViewGroup) findViewById(R.id.recipe_fragment_container);
+            ViewGroup recipeContainer = findViewById(R.id.recipe_fragment_container);
             RecipeFragment recipeFragment = new RecipeFragment();
             recipeFragment.setRecipeData(mRecipe);
 
@@ -67,12 +66,14 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepListA
                         .replace(stepsContainer.getId(), stepFragment, stepFragment.getClass().getName())
                         .commit();
                 if (mRecipe != null)
-                    stepFragment.setStepData(mRecipe, mStepIndx, IS_BIG_SCREEN, this);
+                    stepFragment.setStepData(mRecipe, mStepIndx, IS_BIG_SCREEN, this, 0);
             }
         } else {
             IS_BIG_SCREEN = savedInstanceState.getBoolean(K_IS_BIG_SCREEN);
             mRecipe = (Recipe) savedInstanceState.getSerializable(K_SELECTED_RECIPE);
             mStepIndx = savedInstanceState.getInt(K_SELECTED_STEP_IDX);
+            stepFragment = (StepFragment) getSupportFragmentManager().findFragmentByTag(StepFragment.class.getName());
+            stepFragment.setStepData(mRecipe, mStepIndx, IS_BIG_SCREEN, this, 0);
         }
 //        if (CALLED_FROM_NOTIF) {
 //            boolean isAdded = stepFragment.isAdded();
@@ -97,7 +98,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepListA
 
     private void selectStep(int selStep) {
         if (IS_BIG_SCREEN && stepFragment != null) {
-            stepFragment.setStepData(mRecipe, selStep, IS_BIG_SCREEN, this);
+            stepFragment.setStepData(mRecipe, selStep, IS_BIG_SCREEN, this, 0);
             stepFragment.loadData();
         } else {
             Intent intent = new Intent(this, StepActivity.class);

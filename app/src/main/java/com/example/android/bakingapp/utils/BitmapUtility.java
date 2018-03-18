@@ -6,11 +6,12 @@ import android.graphics.BitmapFactory;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Created by Mauricio Torres on 05/02/2018.
+ * Created by Mauricio Torres
+ * on 05/02/2018.
  */
 
 public class BitmapUtility {
-    public static byte[] getBytes(Bitmap bitmap) {
+    static byte[] getBytes(Bitmap bitmap) {
         if (bitmap == null) return null;
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -22,11 +23,11 @@ public class BitmapUtility {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 
-    public static byte[] getSmallImageBytes(byte[] bytes) {
-        Bitmap bitmap = getImage(bytes);
-        if (bitmap == null) return null;
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-        return stream.toByteArray();
-    }
+//    public static byte[] getSmallImageBytes(byte[] bytes) {
+//        Bitmap bitmap = getImage(bytes);
+//        if (bitmap == null) return null;
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+//        return stream.toByteArray();
+//    }
 }

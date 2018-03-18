@@ -10,11 +10,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
+
+import timber.log.Timber;
 
 /**
- * Created by Mauricio Torres on 01/03/2018.
- *
+ * Created by Mauricio Torres
+ * on 01/03/2018.
  */
 
 public class RecipeContentProvider extends ContentProvider {
@@ -88,7 +89,7 @@ public class RecipeContentProvider extends ContentProvider {
                         sortOrder);
                 break;
             default:
-                Log.e(".query()", "Unknown uri: " + uri);
+                Timber.e(".query()Unknown uri: %s", uri);
                 break;
         }
         if (retCursor != null) {
@@ -178,12 +179,12 @@ public class RecipeContentProvider extends ContentProvider {
                             selectionArgs);
                     break;
                 default:
-                    Log.e("delete()", "Unknown uri: " + uri);
+                    Timber.e(".delete().Unknown uri: %s", uri);
                     break;
             }
             getContext().getContentResolver().notifyChange(uri, null);
         } catch (Exception ex) {
-            Log.e("delete()", uri + " | " + ex.getMessage());
+            Timber.e( uri + " | " + ex.getMessage());
         }
         return itemsDeleted;
     }
@@ -201,11 +202,11 @@ public class RecipeContentProvider extends ContentProvider {
                             selectionArgs);
                     break;
                 default:
-                    Log.e("update()", "Unknown uri: " + uri);
+                    Timber.e("Unknown uri: %s", uri);
                     break;
             }
         } catch (Exception ex) {
-            Log.e("update()", uri + " | " + ex.getMessage());
+            Timber.e(uri + " | " + ex.getMessage());
         }
         return itemsUpdated;
     }

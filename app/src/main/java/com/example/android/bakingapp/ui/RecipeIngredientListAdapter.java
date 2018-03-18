@@ -11,11 +11,12 @@ import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.entities.Ingredient;
 
 /**
- * Created by Mauricio Torres on 04/02/2018.
+ * Created by Mauricio Torres
+ * on 04/02/2018.
  */
 
 public class RecipeIngredientListAdapter extends RecyclerView.Adapter<RecipeIngredientListAdapter.RecipeIngredientLisAdapterViewHolder> {
-    private Context mContext;
+    private final Context mContext;
     private Ingredient[] ingredientsData;
 
     public RecipeIngredientListAdapter(Context context) {
@@ -45,7 +46,7 @@ public class RecipeIngredientListAdapter extends RecyclerView.Adapter<RecipeIngr
         else return ingredientsData.length;
     }
 
-    public Ingredient[] getIngredientsData() {
+    private Ingredient[] getIngredientsData() {
         return ingredientsData;
     }
 
@@ -65,9 +66,9 @@ public class RecipeIngredientListAdapter extends RecyclerView.Adapter<RecipeIngr
 
         public RecipeIngredientLisAdapterViewHolder(View itemView) {
             super(itemView);
-            tv_ingred_name = (TextView) itemView.findViewById(R.id.tv_ingredient_name);
-            tv_ingred_qty = (TextView) itemView.findViewById(R.id.tv_ingredient_qty);
-            tv_ingred_measure = (TextView) itemView.findViewById(R.id.tv_ingredient_measure);
+            tv_ingred_name = itemView.findViewById(R.id.tv_ingredient_name);
+            tv_ingred_qty = itemView.findViewById(R.id.tv_ingredient_qty);
+            tv_ingred_measure = itemView.findViewById(R.id.tv_ingredient_measure);
         }
     }
 }

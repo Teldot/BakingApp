@@ -9,14 +9,12 @@ import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.entities.Recipe;
 
 public class StepActivity extends AppCompatActivity {
-    private ViewGroup stepContainer;
     private static final String K_SELECTED_RECIPE = "K_SELECTED_RECIPE";
     private static final String K_SELECTED_STEP_IDX = "K_SELECTED_STEP_IDX";
     private static final String K_IS_BIG_SCREEN = "K_IS_BIG_SCREEN";
     private Recipe mRecipe;
     private int mStepIndex;
     private boolean IS_BIG_SCREEN;
-    private StepFragment stepFragment;
 
 
     @Override
@@ -31,12 +29,13 @@ public class StepActivity extends AppCompatActivity {
         }
 
         // Only create new fragments when there is no previously saved state
+        StepFragment stepFragment;
         if (savedInstanceState == null) {
             //STEPS
 
-            stepContainer = (ViewGroup) findViewById(R.id.step_fragment_container);
+            ViewGroup stepContainer = findViewById(R.id.step_fragment_container);
             stepFragment = new StepFragment();
-            stepFragment.setStepData(mRecipe, mStepIndex, IS_BIG_SCREEN, this);
+            stepFragment.setStepData(mRecipe, mStepIndex, IS_BIG_SCREEN, this, 0);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
@@ -47,6 +46,8 @@ public class StepActivity extends AppCompatActivity {
             mRecipe = (Recipe) savedInstanceState.getSerializable(K_SELECTED_RECIPE);
             mStepIndex = savedInstanceState.getInt(K_SELECTED_STEP_IDX);
             IS_BIG_SCREEN = savedInstanceState.getBoolean(K_IS_BIG_SCREEN);
+            stepFragment = (StepFragment) getSupportFragmentManager().findFragmentByTag(StepFragment.class.getName());
+            stepFragment.setStepData(mRecipe, mStepIndex, IS_BIG_SCREEN, this, 0);
         }
 
     }

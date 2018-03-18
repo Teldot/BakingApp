@@ -15,7 +15,7 @@ import com.example.android.bakingapp.R;
  */
 
 public class BakingService extends IntentService {
-    public static final String ACTION_BAKING = "com.example.android.bakingapp.action.baking";
+    private static final String ACTION_BAKING = "com.example.android.bakingapp.action.baking";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
