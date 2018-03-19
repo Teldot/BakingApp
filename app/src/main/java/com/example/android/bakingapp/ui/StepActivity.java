@@ -35,7 +35,7 @@ public class StepActivity extends AppCompatActivity {
 
             ViewGroup stepContainer = findViewById(R.id.step_fragment_container);
             stepFragment = new StepFragment();
-            stepFragment.setStepData(mRecipe, mStepIndex, IS_BIG_SCREEN, this, 0);
+            stepFragment.setStepData(mRecipe, mStepIndex, IS_BIG_SCREEN, this, 0, true);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
@@ -47,7 +47,7 @@ public class StepActivity extends AppCompatActivity {
             mStepIndex = savedInstanceState.getInt(K_SELECTED_STEP_IDX);
             IS_BIG_SCREEN = savedInstanceState.getBoolean(K_IS_BIG_SCREEN);
             stepFragment = (StepFragment) getSupportFragmentManager().findFragmentByTag(StepFragment.class.getName());
-            stepFragment.setStepData(mRecipe, mStepIndex, IS_BIG_SCREEN, this, 0);
+            stepFragment.setStepData(mRecipe, mStepIndex, IS_BIG_SCREEN, this, 0, true);
         }
 
     }
